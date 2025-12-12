@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>House of Miyanna</title>
+  <style>
+    :root{--accent:#c7a7a7;--dark:#111;--muted:#666}
+    *{box-sizing:border-box}
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      scroll-behavior: smooth;
+      color: #111;
+    }
+    header {
+      background-color: #000;
+      color: #fff;
+      padding: 14px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    .brand {
+      display:flex;align-items:center;gap:12px
+    }
+    header img {height:56px; animation:fadeIn 600ms ease-in-out}
+    header h1{margin:0;font-size:20px;letter-spacing:1px}
+    nav a {color:#fff;text-decoration:none;margin-left:18px;font-size:15px}
+    nav a:hover{color:var(--accent)}
+
+    /* cart icon */
+    .cart-btn{position:relative;background:transparent;border:none;color:#fff;cursor:pointer;font-size:18px}
+    .cart-count{position:absolute;top:-6px;right:-8px;background:#ff3b30;color:#fff;border-radius:50%;padding:3px 7px;font-size:12px}
+
+    .hero {
+      background: linear-gradient(rgba(0,0,0,0.25), rgba(0,0,0,0.25)), url('https://via.placeholder.com/1600x700') center/cover no-repeat;
+      height: 60vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: #fff;
+      padding: 20px;
+      animation: zoomIn 1.6s ease-in-out;
+    }
+    .hero h2 {font-size:44px;margin:0}
+
+    .section {padding:40px 24px; text-align:center}
+    .section h2{margin-bottom:6px}
+    .section p{color:var(--muted)}
+
+    .products {display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px;max-width:1200px;margin:28px auto}
+    .product-card{background:#fff;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,0.08);overflow:hidden;display:flex;flex-direction:column;transition:transform .25s}
+    .product-card:hover{transform:translateY(-8px)}
+    .product-card img{width:100%;height:280px;object-fit:cover}
+    .product-card .meta{padding:14px}
+    .product-card h3{margin:0 0 8px;font-size:18px}
+    .price{font-weight:700;margin-top:6px}
+    .card-actions{display:flex;gap:8px;align-items:center;justify-content:space-between;margin-top:12px}
+    .btn{background:#000;color:#fff;border:none;padding:10px 12px;border-radius:8px;cursor:pointer;text-decoration:none}
+    .btn.secondary{background:transparent;border:1px solid #000;color:#000}
+
+    footer{background:#000;color:#fff;text-align:center;padding:18px;margin-top:40px}
+
+    /* cart drawer */
+    .cart-drawer{position:fixed;right:-420px;top:0;width:420px;height:100vh;background:#fff;box-shadow:-20px 0 40px rgba(0,0,0,0.15);transition:right .35s;z-index:2000;display:flex;flex-direction:column}
+    .cart-drawer.open{right:0}
+    .cart-header{padding:18px;border-bottom:1px solid #eee;display:flex;justify-content:space-between;align-items:center}
+    .cart-body{padding:14px;flex:1;overflow:auto}
+    .cart-item{display:flex;gap:12px;padding:8px 0;border-bottom:1px dashed #eee}
+    .cart-item img{width:78px;height:78px;object-fit:cover;border-radius:8px}
+    .qty-controls{display:flex;gap:6px;align-items:center}
+    .subtotal{padding:14px;border-top:1px solid #eee}
+    .checkout-btn{display:block;width:100%;padding:12px;border-radius:8px;background:#000;color:#fff;border:none;font-weight:700;cursor:pointer}
+
+    /* responsive */
+    @media(max-width:720px){.cart-drawer{width:100%;}}
+
+    /* animations */
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+    @keyframes zoomIn{from{transform:scale(1.05);opacity:0}to{transform:scale(1);opacity:1}}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <img src="house of miyanna logo.png" alt="House of Miyanna Logo" onerror="this.src='logo.png'"/>
+      <h1>House of Miyanna</h1>
+    </div>
+    <nav>
+      <a href="#home">Home</a>
+      <a href="#collections">Collections</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+      <button class="cart-btn" id="open-cart" aria-label="Open cart">
+        🛒 Cart <span class="cart-count" id="cart-count">0</span>
+      </button>
+    </nav>
+  </header>
+
+  <section class="hero" id="home">
+    <h2>Elegance Redefined — Women Suits • Sarees • Co-Ord Sets</h2>
+  </section>
+
+  <section class="section" id="collections">
+    <h2>Featured Products</h2>
+    <p>Handpicked pieces from our latest collections.</p>
+
+    <div class="products" id="product-list">
+      <!-- Product cards include data attributes used by the cart JS -->
+
+      <div class="product-card">
+        <img src="https://via.placeholder.com/600x400?text=Embroidered+Suit" alt="Embroidered Suit">
+        <div class="meta">
+          <h3>Embroidered Suit Set</h3>
+          <div class="price">₹3,499</div>
+          <div class="card-actions">
+            <button class="btn add-to-cart" data-id="suit-001" data-name="Embroidered Suit Set" data-price="3499" data-image="https://via.placeholder.com/600x400?text=Embroidered+Suit">Add to Cart</button>
+            <a class="btn secondary" href="file:///C:/Users/Lenovo/Documents/suits%20page.html">View collection</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <img src="https://via.placeholder.com/600x400?text=Pastel+Anarkali" alt="Pastel Anarkali Suit">
+        <div class="meta">
+          <h3>Pastel Anarkali Suit</h3>
+          <div class="price">₹4,199</div>
+          <div class="card-actions">
+            <button class="btn add-to-cart" data-id="suit-002" data-name="Pastel Anarkali Suit" data-price="4199" data-image="https://via.placeholder.com/600x400?text=Pastel+Anarkali">Add to Cart</button>
+            <a class="btn secondary" href="file:///C:/Users/Lenovo/Documents/suits%20page.html">View collection</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <img src="https://via.placeholder.com/600x400?text=Silk+Saree" alt="Silk Saree">
+        <div class="meta">
+          <h3>Silk Embroidered Saree</h3>
+          <div class="price">₹6,499</div>
+          <div class="card-actions">
+            <button class="btn add-to-cart" data-id="saree-001" data-name="Silk Embroidered Saree" data-price="6499" data-image="https://via.placeholder.com/600x400?text=Silk+Saree">Add to Cart</button>
+            <a class="btn secondary" href="file:///C:/Users/Lenovo/Documents/sarees%20page.html">View collection</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <img src="https://via.placeholder.com/600x400?text=Printed+Co-Ord" alt="Printed Co-Ord">
+        <div class="meta">
+          <h3>Printed Co-Ord Set</h3>
+          <div class="price">₹2,999</div>
+          <div class="card-actions">
+            <button class="btn add-to-cart" data-id="coord-001" data-name="Printed Co-Ord Set" data-price="2999" data-image="https://via.placeholder.com/600x400?text=Printed+Co-Ord">Add to Cart</button>
+            <a class="btn secondary" href="file:///C:/Users/Lenovo/Documents/co%20ord%20page.html">View collection</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="section" id="about">
+    <h2>About House of Miyanna</h2>
+    <p>House of Miyanna blends tradition with contemporary fashion, specializing in premium women suits, sarees, and co-ord sets.</p>
+  </section>
+
+  <section class="section" id="contact">
+    <h2>Contact Us</h2>
+    <p>Email: support@miyanna.com</p>
+    <p>Instagram: @houseofmiyanna</p>
+  </section>
+
+  <footer>
+    © 2025 House of Miyanna. All Rights Reserved.
+  </footer>
+
+  <!-- Cart Drawer -->
+  <div class="cart-drawer" id="cart-drawer" aria-hidden="true">
+    <div class="cart-header">
+      <strong>Your Cart</strong>
+      <div>
+        <button id="clear-cart" class="btn secondary">Clear</button>
+        <button id="close-cart" class="btn">Close</button>
+      </div>
+    </div>
+    <div class="cart-body" id="cart-body">
+      <!-- items injected here -->
+    </div>
+    <div class="subtotal" id="cart-subtotal">
+      <div style="display:flex;justify-content:space-between;align-items:center"><span>Subtotal</span><strong id="subtotal-amt">₹0</strong></div>
+      <div style="margin-top:10px;display:flex;gap:10px">
+        <button class="checkout-btn" id="checkout">Proceed to Checkout</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ======= Advanced Cart (localStorage, cross-page) ======= */
+    const CART_KEY = 'hom_cart_v1';
+
+    function getCart(){
+      try{ return JSON.parse(localStorage.getItem(CART_KEY)) || [] }catch(e){return []}
+    }
+    function saveCart(cart){ localStorage.setItem(CART_KEY, JSON.stringify(cart)); updateCount(); }
+
+    function updateCount(){
+      const cart = getCart();
+      const count = cart.reduce((s,i)=>s + (i.quantity||1),0);
+      document.getElementById('cart-count').textContent = count;
+    }
+
+    function addToCart(product){
+      const cart = getCart();
+      const found = cart.find(i=>i.id===product.id);
+      if(found){ found.quantity = (found.quantity||1) + 1; }
+      else{ cart.push({...product, quantity:1}); }
+      saveCart(cart);
+      openCart();
+    }
+
+    // render cart drawer
+    function renderCart(){
+      const cart = getCart();
+      const body = document.getElementById('cart-body'); body.innerHTML='';
+      if(cart.length===0){ body.innerHTML = '<p>Your cart is empty.</p>'; document.getElementById('subtotal-amt').textContent = '₹0'; return; }
+      let subtotal = 0;
+      cart.forEach(item=>{
+        subtotal += item.price * item.quantity;
+        const div = document.createElement('div'); div.className='cart-item';
+        div.innerHTML = `
+          <img src="${item.image}" alt="${item.name}">
+          <div style="flex:1">
+            <div style="display:flex;justify-content:space-between;align-items:center"><strong>${item.name}</strong><span>₹${(item.price).toLocaleString()}</span></div>
+            <div style="margin-top:8px;display:flex;justify-content:space-between;align-items:center">
+              <div class=\"qty-controls\"> 
+                <button class=\"btn secondary qty-decrease\" data-id=\"${item.id}\">-</button>
+                <span style=\"padding:0 8px\">${item.quantity}</span>
+                <button class=\"btn qty-increase\" data-id=\"${item.id}\">+</button>
+              </div>
+              <button class=\"btn secondary remove-item\" data-id=\"${item.id}\">Remove</button>
+            </div>
+          </div>
+        `;
+        body.appendChild(div);
+      });
+      document.getElementById('subtotal-amt').textContent = '₹' + subtotal.toLocaleString();
+
+      // attach listeners for qty and remove
+      document.querySelectorAll('.qty-decrease').forEach(btn=>btn.addEventListener('click', (e)=>{
+        const id = e.currentTarget.dataset.id; changeQty(id, -1);
+      }));
+      document.querySelectorAll('.qty-increase').forEach(btn=>btn.addEventListener('click', (e)=>{
+        const id = e.currentTarget.dataset.id; changeQty(id, +1);
+      }));
+      document.querySelectorAll('.remove-item').forEach(btn=>btn.addEventListener('click', (e)=>{
+        const id = e.currentTarget.dataset.id; removeItem(id);
+      }));
+    }
+
+    function changeQty(id, delta){
+      const cart = getCart();
+      const idx = cart.findIndex(i=>i.id===id);
+      if(idx===-1) return;
+      cart[idx].quantity = Math.max(1, (cart[idx].quantity||1) + delta);
+      saveCart(cart); renderCart();
+    }
+    function removeItem(id){
+      let cart = getCart(); cart = cart.filter(i=>i.id!==id); saveCart(cart); renderCart();
+    }
+    function clearCart(){ localStorage.removeItem(CART_KEY); renderCart(); updateCount(); }
+
+    // open/close cart
+    const drawer = document.getElementById('cart-drawer');
+    function openCart(){ drawer.classList.add('open'); drawer.setAttribute('aria-hidden','false'); renderCart(); }
+    function closeCart(){ drawer.classList.remove('open'); drawer.setAttribute('aria-hidden','true'); }
+
+    // wire up Add to Cart buttons
+    document.querySelectorAll('.add-to-cart').forEach(btn=>{
+      btn.addEventListener('click', e=>{
+        const el = e.currentTarget;
+        const product = {
+          id: el.dataset.id,
+          name: el.dataset.name,
+          price: Number(el.dataset.price),
+          image: el.dataset.image
+        };
+        addToCart(product);
+      });
+    });
+
+    // header cart open/close
+    document.getElementById('open-cart').addEventListener('click', openCart);
+    document.getElementById('close-cart').addEventListener('click', closeCart);
+    document.getElementById('clear-cart').addEventListener('click', ()=>{ if(confirm('Clear cart?')){ clearCart(); updateCount(); } });
+    document.getElementById('checkout').addEventListener('click', ()=>{
+      const cart = getCart(); if(cart.length===0){ alert('Your cart is empty'); return; }
+      // Demo checkout: show order summary and clear cart
+      let summary = 'Order summary:
+'; cart.forEach(i=> summary += `${i.name} x${i.quantity} - ₹${(i.price*i.quantity).toLocaleString()}
+`);
+      summary += `
+Subtotal: ₹${cart.reduce((s,i)=>s+i.price*i.quantity,0).toLocaleString()}`;
+      if(confirm(summary + '
+
+Place order (demo)?')){ alert('Order placed (demo). Thank you!'); clearCart(); updateCount(); closeCart(); }
+    });
+
+    // initial render
+    updateCount();
+
+    // make cart state reactive across tabs (listen to storage events)
+    window.addEventListener('storage', (e)=>{ if(e.key===CART_KEY) updateCount(); });
+
+  </script>
+</body>
+</html>
